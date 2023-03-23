@@ -26,6 +26,10 @@ public class ZBug extends Bug
 {
     private int steps;
     private int sideLength;
+	
+	private int stage;
+    private boolean completed;
+    private boolean movedThisRot;
 
     /**
      * Constructs a box bug that traces a square of a given side length
@@ -35,6 +39,9 @@ public class ZBug extends Bug
     {
         steps = 0;
         sideLength = length;
+        stage = 1;
+        completed = false;
+        movedThisRot = false;
 		turn(); turn();
     }
 
@@ -42,58 +49,40 @@ public class ZBug extends Bug
      * Moves to the next location of the square.
      */
     public void act()
-    {
-        int part = 1;
+    {        
         
-        
-        
-        //unfinished
-        
-        
-        if (canMove())
-        {
-			if ( steps < sideLength)
+        while (!completed)
+        {	
+			for (int i = 0; i < sideLength; i++)
 			{
-				move();
-				steps++;
+				if (canMove() )
+				{
+					move();
+				}
 			}
-			else if (steps == sideLength)
-			{
-				part = 2;
-				steps = 0;
-			}
-		}
-        else if (canMove() && part == 2)
-        {
+       
 			turn();
 			turn();
 			turn();
 			
-			if ( steps < sideLength && canMove() )
+			for (int i = 0; i < sideLength; i++)
 			{
-				move();
-				steps++;
-			}
-			else if (steps == sideLength)
-			{
-				part = 3;
-				steps = 0;
+				if (canMove() )
+					move();
 			}
 			
-		}
-        else if (canMove() && part == 3)
-        {
 			turn(); turn(); turn(); turn(); turn(); 
-			if ( steps < sideLength && canMove() )
+
+			for (int i = 0; i < sideLength; i++)
 			{
-				move();
-				steps++;
-			}
-			else if (steps == sideLength)
-			{
-				part = 0;
+				if (canMove() )
+					move();
 			}
 			
+			completed = true;
 		}
+       
+	
+	
     }
 }
