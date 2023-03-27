@@ -26,11 +26,13 @@ public class ZBug extends Bug
 {
     private int steps;
     private int sideLength;
-	
-	private int stage;
-    private boolean completed;
-    private boolean movedThisRot;
 
+    private boolean done;
+    private int stage;
+    
+    private boolean turnedOnce; 
+    private boolean turnedTwice;
+    
     /**
      * Constructs a box bug that traces a square of a given side length
      * @param length the side length
@@ -39,9 +41,13 @@ public class ZBug extends Bug
     {
         steps = 0;
         sideLength = length;
+        
+        done = false;
         stage = 1;
-        completed = false;
-        movedThisRot = false;
+        
+        turnedOnce = false;
+        turnedTwice = false; 
+        
 		turn(); turn();
     }
 
@@ -50,38 +56,72 @@ public class ZBug extends Bug
      */
     public void act()
     {        
-        
-        while (!completed)
-        {	
-			for (int i = 0; i < sideLength; i++)
-			{
-				if (canMove() )
-				{
-					move();
-				}
-			}
-       
-			turn();
-			turn();
-			turn();
-			
-			for (int i = 0; i < sideLength; i++)
-			{
-				if (canMove() )
-					move();
-			}
-			
-			turn(); turn(); turn(); turn(); turn(); 
-
-			for (int i = 0; i < sideLength; i++)
-			{
-				if (canMove() )
-					move();
-			}
-			
-			completed = true;
-		}
-       
+        if (!done)
+        {       	
+        	if (stage == 1)
+        	{
+        		if (steps < sideLength && canMove() )
+        		{
+        			move();
+        			steps++;
+        		}	
+        		else if (steps == sideLength)
+        		{
+        			stage++;
+            		steps = 0;
+        		}
+        	}
+        	else if (stage == 2) 
+        	{
+        		
+        		if (!turnedOnce)
+        		{
+            		turn(); turn(); turn();
+            		turnedOnce = true;
+        		}
+        		
+        		if (steps < sideLength && canMove() )
+        		{
+        			move();
+        			steps++;
+        		}	
+        		else if (steps == sideLength)
+        		{
+        			stage++;
+            		steps = 0;
+        		}
+   
+        	}
+        	else if (stage == 3)
+        	{
+        		if (!turnedTwice)
+        		{
+            		turn(); turn(); turn(); turn(); turn(); 
+            		turnedTwice = true;
+        		}
+        		
+    			
+    			if (steps < sideLength && canMove() )
+        		{
+        			move();
+        			steps++;
+        		}	
+    			else if (steps == sideLength)
+        		{
+        			stage++;
+            		steps = 0;
+        		}
+    			
+	
+        	}
+        	else if (stage == 4)
+        	{
+        		done = true;
+        	}
+        	
+        }
+    	
+    
 	
 	
     }
