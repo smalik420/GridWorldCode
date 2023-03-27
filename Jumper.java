@@ -1,16 +1,17 @@
 //Sidhant Malik
 
-package Activity3;
 import info.gridworld.grid.Grid;
+import info.gridworld.grid.BoundedGrid;
 import info.gridworld.grid.Location;
+import info.gridworld.actor.ActorWorld;
 import info.gridworld.actor.Actor;
 import info.gridworld.actor.Bug;
-import java.awt.Color;
+import info.gridworld.actor.Rock;
 import info.gridworld.actor.Flower;
+import java.awt.Color;
 
 public class Jumper extends Bug 
 {
-
 	private int jumpCount;
 
 	public Jumper() 
@@ -27,10 +28,10 @@ public class Jumper extends Bug
 			return false;
 		}
 		
-		Location loc = getLocation();
-		Location nextLoc = loc.getAdjacentLocation(getDirection());
+		Location current = getLocation();
+		Location adjacent = current.getAdjacentLocation(getDirection());
 		
-		if (!grid.isValid(nextLoc)) 
+		if (!grid.isValid(adjacent)) 
 		{
 			return false;
 		}
@@ -41,8 +42,9 @@ public class Jumper extends Bug
 			return false;
 		}
 		
-		Actor neighbor = grid.get(jumpLoc);
-		return (neighbor == null || neighbor instanceof Flower); //used api for instance of but basically checks if its a flower obj
+		Actor neighbor = grid.get(jumpLanding);
+		//this is the one that can eventually be true
+		return (neighbor == null || neighbor instanceof Flower); //check if flower seperately
 	}
 
 	public void jump() 
@@ -53,13 +55,13 @@ public class Jumper extends Bug
 			return;
 		}
 		
-		Location loc = getLocation();
-		Location nextLoc = loc.getAdjacentLocation(getDirection());
-		Location jumpLanding = nextLoc.getAdjacentLocation(getDirection());
+		Location current = getLocation();
+		Location nextLocation = current.getAdjacentLocation(getDirection());
+		Location jumpLanding = nextLocation.getAdjacentLocation(getDirection());
 		moveTo(jumpLanding);
 		
 		Flower flower = new Flower();
-		flower.putSelfInGrid(grid, loc);
+		flower.putSelfInGrid(grid, current);
 	}
 
 	public void act() 
@@ -73,7 +75,8 @@ public class Jumper extends Bug
 		{
 			jump();
 			jumpCount = 0;
-		} else 
+		} 
+		else 
 		{
 			turn();
 			jumpCount++;
